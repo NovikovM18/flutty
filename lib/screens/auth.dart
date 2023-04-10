@@ -1,0 +1,27 @@
+import 'package:flutter/material.dart';
+
+class Auth extends StatefulWidget {
+  const Auth({super.key});
+
+  @override
+  State<Auth> createState() => _AuthState();
+}
+
+class _AuthState extends State<Auth> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('login'),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('data')
+          ]),
+      ),
+    );
+  } 
+}

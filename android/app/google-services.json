@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "132127563232",
+    "project_id": "appp-40e7e",
+    "storage_bucket": "appp-40e7e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:132127563232:android:788ff423b294e2095f1f85",
+        "android_client_info": {
+          "package_name": "com.example.flutty"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "132127563232-op61be9toasradtmhdcr3jkteuum9vkj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdn4KzkM6fQcLbXHcn4TB_GRa0r4ki6U0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "132127563232-op61be9toasradtmhdcr3jkteuum9vkj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "132127563232-inlu1qgba9dtkcgdarfote4s59lvg38s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutty"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
