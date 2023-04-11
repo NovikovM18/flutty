@@ -1,7 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutty/screens/auth.dart';
+import 'package:flutty/screens/account.dart';
 import 'package:flutty/screens/home.dart';
+import 'package:flutty/screens/login.dart';
+import 'package:flutty/screens/reset_pass.dart';
+import 'package:flutty/screens/signup.dart';
+import 'package:flutty/screens/verify_email.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -29,7 +33,16 @@ class _MyAppState extends State<MyApp> {
           backgroundColor: Colors.blue,
         ),
       ),
-      home: const Auth(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const Home(),
+        '/home': (context) => const Home(),
+        '/account': (context) => const Account(),
+        '/login': (context) => const Login(),
+        '/signup': (context) => const Signup(),
+        '/reset_password': (context) => const ResetPass(),
+        '/verify_email': (context) => const VerifyEmail(),
+      },
     );
   }
 }
