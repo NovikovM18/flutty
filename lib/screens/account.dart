@@ -31,10 +31,11 @@ class _AccountState extends State<Account> {
             Navigator.pop(context);
           },
           icon: const Icon(
-            Icons.arrow_back_ios, // add custom icons also
+            Icons.arrow_back_ios,
           ),
         ),
-        title: const Text('Аккаунт'),
+        title: const Text('Account info'),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),

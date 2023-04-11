@@ -19,11 +19,11 @@ class _HomeState extends State<Home> {
   List menuList = [
     {
       'id': '0',
-      'name': 'ToDo',
+      'name': 'ToDos',
     },
     {
       'id': '1',
-      'name': 'Chat',
+      'name': 'Chats',
     },
     {
       'id': '2',
@@ -32,17 +32,14 @@ class _HomeState extends State<Home> {
   ];
 
   void redirect(screenName) {
-    Navigator.pop(context);
-    if (screenName == 'ToDo') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ToDos()),
-      );
-    } else if (screenName == 'Chat') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Chats()),
-      );
+    if (screenName == 'ToDos') {
+      Navigator.pushNamedAndRemoveUntil(context, '/todos', (Route<dynamic> route) => true);
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => const ToDos()),
+      // );
+    } else if (screenName == 'Chats') {
+      Navigator.pushNamedAndRemoveUntil(context, '/chats', (Route<dynamic> route) => true);
     } else if (screenName == 'Settings') {
       Navigator.push(
         context,
@@ -57,9 +54,10 @@ class _HomeState extends State<Home> {
     final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Главная страница'),
+        title: const Text('Flutty'),
+        centerTitle: true,
         actions: [
           IconButton(
             onPressed: () {
@@ -76,17 +74,14 @@ class _HomeState extends State<Home> {
                 );
               }
             },
-            icon: Icon(
-              Icons.person,
-              color: (user == null) ? Colors.white : Colors.yellow,
-            ),
+            icon: (user == null) ? Icon(Icons.person_outlined) : Icon(Icons.person)
           ),
         ],
       ),
       body: SafeArea(
         child: Center(
           child: (user == null)
-            ? const Text("Контент для НЕ зарегистрированных в системе")
+            ? const Text('go login!')
             : ListView.builder(
               itemCount: menuList.length,
               itemBuilder: (context, index) {
