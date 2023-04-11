@@ -1,9 +1,6 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutty/screens/home.dart';
 
 class VerifyEmail extends StatefulWidget {
@@ -26,7 +23,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
 
     if (!isEmailVerified) {
       sendVerificationEmail();
-
       timer = Timer.periodic(
         const Duration(seconds: 3),
         (_) => checkEmailVerified(),
@@ -42,13 +38,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
 
   Future<void> checkEmailVerified() async {
     await FirebaseAuth.instance.currentUser!.reload();
-
     setState(() {
       isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
     });
-
-    print(isEmailVerified);
-
     if (isEmailVerified) timer?.cancel();
   }
 
@@ -56,15 +48,21 @@ class _VerifyEmailState extends State<VerifyEmail> {
     try {
       final user = FirebaseAuth.instance.currentUser!;
       await user.sendEmailVerification();
-
       setState(() => canResendEmail = false);
       await Future.delayed(const Duration(seconds: 5));
-
       setState(() => canResendEmail = true);
     } catch (e) {
-      print(e);
+      showDialog(context: context, builder: (context) => 
+        AlertDialog(
+          title: Text(e.toString()),
+        )
+      );
       if (mounted) {
-        // alert!!!
+        showDialog(context: context, builder: (context) => 
+          const AlertDialog(
+            title: Text('System error, please try again'),
+          )
+        );
       }
     }
   }
@@ -73,7 +71,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
   Widget build(BuildContext context) => isEmailVerified ? const Home() : Scaffold(
     resizeToAvoidBottomInset: false,
     appBar: AppBar(
-      title: const Text('Верификация Email адреса'),
+      title: const Text('Verify email'),
+      centerTitle: true,
     ),
     body: SafeArea(
       child: Padding(
@@ -82,7 +81,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'Письмо с подтверждением было отправлено на вашу электронную почту.',
+              'Check your email',
               style: TextStyle(
                 fontSize: 20,
               ),
@@ -91,16 +90,17 @@ class _VerifyEmailState extends State<VerifyEmail> {
             ElevatedButton.icon(
               onPressed: canResendEmail ? sendVerificationEmail : null,
               icon: const Icon(Icons.email),
-              label: const Text('Повторно отправить'),
+              label: const Text('Resend'),
             ),
             const SizedBox(height: 20),
             TextButton(
               onPressed: () async {
                 timer?.cancel();
-                await FirebaseAuth.instance.currentUser!.delete();
+                await FirebaseAuth.instance.currentUser?.delete();
+                Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
               },
               child: const Text(
-                'Отменить',
+                'Cancel',
                 style: TextStyle(
                   color: Colors.blue,
                 ),

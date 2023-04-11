@@ -1,8 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -15,8 +13,7 @@ class _SignupState extends State<Signup> {
   bool isHiddenPassword = true;
   TextEditingController emailTextInputController = TextEditingController();
   TextEditingController passwordTextInputController = TextEditingController();
-  TextEditingController passwordTextRepeatInputController =
-      TextEditingController();
+  TextEditingController passwordTextRepeatInputController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -24,7 +21,6 @@ class _SignupState extends State<Signup> {
     emailTextInputController.dispose();
     passwordTextInputController.dispose();
     passwordTextRepeatInputController.dispose();
-
     super.dispose();
   }
 
@@ -35,33 +31,29 @@ class _SignupState extends State<Signup> {
   }
 
   Future<void> signUp() async {
-    final navigator = Navigator.of(context);
-
     final isValid = formKey.currentState!.validate();
     if (!isValid) return;
-
     if (passwordTextInputController.text != passwordTextRepeatInputController.text) {
-      // alert!!!
+      showDialog(context: context, builder: (context) => 
+        const AlertDialog(
+          title: Text('Pass is not equal'),
+        )
+      );
       return;
     }
-
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailTextInputController.text.trim(),
         password: passwordTextInputController.text.trim(),
       );
     } on FirebaseAuthException catch (e) {
-      print(e.code);
-
-      if (e.code == 'email-already-in-use') {
-        // alert!!!
-        return;
-      } else {
-        // alert!!!
-      }
+      showDialog(context: context, builder: (context) => 
+        AlertDialog(
+          title: Text(e.code),
+        )
+      );
     }
-
-    navigator.pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, '/verify_email', (Route<dynamic> route) => false);
   }
 
   @override
@@ -69,7 +61,8 @@ class _SignupState extends State<Signup> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Зарегистрироваться'),
+        title: const Text('Signup'),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(30.0),
@@ -82,12 +75,12 @@ class _SignupState extends State<Signup> {
                 autocorrect: false,
                 controller: emailTextInputController,
                 validator: (email) =>
-                    email != null && !EmailValidator.validate(email)
-                        ? 'Введите правильный Email'
-                        : null,
+                  email != null && !EmailValidator.validate(email)
+                    ? 'Enter valid email'
+                    : null,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Введите Email',
+                  hintText: 'Enter your email',
                 ),
               ),
               const SizedBox(height: 30),
@@ -97,17 +90,17 @@ class _SignupState extends State<Signup> {
                 obscureText: isHiddenPassword,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) => value != null && value.length < 6
-                    ? 'Минимум 6 символов'
-                    : null,
+                  ? 'Minimum password length is 6 characters'
+                  : null,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
-                  hintText: 'Введите пароль',
+                  hintText: 'Enter password',
                   suffix: InkWell(
                     onTap: togglePasswordView,
                     child: Icon(
                       isHiddenPassword
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                       color: Colors.black,
                     ),
                   ),
@@ -120,17 +113,17 @@ class _SignupState extends State<Signup> {
                 obscureText: isHiddenPassword,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) => value != null && value.length < 6
-                    ? 'Минимум 6 символов'
-                    : null,
+                  ? 'Minimum password length is 6 characters'
+                  : null,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
-                  hintText: 'Введите пароль еще раз',
+                  hintText: 'Repeat password',
                   suffix: InkWell(
                     onTap: togglePasswordView,
                     child: Icon(
                       isHiddenPassword
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                       color: Colors.black,
                     ),
                   ),
@@ -139,13 +132,13 @@ class _SignupState extends State<Signup> {
               const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: signUp,
-                child: const Center(child: Text('Регистрация')),
+                child: const Center(child: Text('Signup')),
               ),
               const SizedBox(height: 30),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: const Text(
-                  'Войти',
+                  'Signin',
                   style: TextStyle(
                     decoration: TextDecoration.underline,
                   ),

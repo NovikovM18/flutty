@@ -1,11 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutty/screens/account.dart';
-import 'package:flutty/screens/chats.dart';
 import 'package:flutty/screens/login.dart';
-import 'package:flutty/screens/menu.dart';
 import 'package:flutty/screens/settings.dart';
-import 'package:flutty/screens/todos.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -41,10 +38,7 @@ class _HomeState extends State<Home> {
     } else if (screenName == 'Chats') {
       Navigator.pushNamedAndRemoveUntil(context, '/chats', (Route<dynamic> route) => true);
     } else if (screenName == 'Settings') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Settings()),
-      );
+      Navigator.pushNamedAndRemoveUntil(context, '/settings', (Route<dynamic> route) => true);
     }
   }
 
@@ -74,7 +68,9 @@ class _HomeState extends State<Home> {
                 );
               }
             },
-            icon: (user == null) ? Icon(Icons.person_outlined) : Icon(Icons.person)
+            icon: (user == null)
+              ? const Icon(Icons.person_outlined)
+              : const Icon(Icons.person)
           ),
         ],
       ),

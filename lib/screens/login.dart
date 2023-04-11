@@ -19,7 +19,6 @@ bool isHiddenPassword = true;
   void dispose() {
     emailTextInputController.dispose();
     passwordTextInputController.dispose();
-
     super.dispose();
   }
 
@@ -38,12 +37,24 @@ bool isHiddenPassword = true;
         password: passwordTextInputController.text.trim(),
       );
     } on FirebaseAuthException catch (e) {
-        // ALERT!!!
+      showDialog(context: context, builder: (context) => 
+        AlertDialog(
+          title: Text(e.code),
+        )
+      );
       if (e.code == 'user-not-found' || e.code == 'wrong-password') {
-        // ALERT!!!
+        showDialog(context: context, builder: (context) => 
+          AlertDialog(
+            title: Text(e.code),
+          )
+        );
         return;
       } else {
-        // ALERT!!!
+        showDialog(context: context, builder: (context) => 
+          AlertDialog(
+            title: Text(e.code),
+          )
+        );
         return;
       }
     }
@@ -55,7 +66,8 @@ bool isHiddenPassword = true;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Войти'),
+        title: const Text('Signin'),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(30.0),
@@ -69,11 +81,11 @@ bool isHiddenPassword = true;
                 controller: emailTextInputController,
                 validator: (email) =>
                   email != null && !EmailValidator.validate(email)
-                    ? 'Введите правильный Email'
+                    ? 'Email is invalid'
                     : null,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Введите Email',
+                  hintText: 'Enter your email',
                 ),
               ),
               const SizedBox(height: 30),
@@ -82,18 +94,18 @@ bool isHiddenPassword = true;
                 controller: passwordTextInputController,
                 obscureText: isHiddenPassword,
                 validator: (value) => value != null && value.length < 6
-                    ? 'Минимум 6 символов'
+                    ? 'Minimum password length is 6 characters'
                     : null,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
-                  hintText: 'Введите пароль',
+                  hintText: 'Enter your password',
                   suffix: InkWell(
                     onTap: togglePasswordView,
                     child: Icon(
                       isHiddenPassword
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                       color: Colors.black,
                     ),
                   ),
@@ -102,13 +114,13 @@ bool isHiddenPassword = true;
               const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: login,
-                child: const Center(child: Text('Войти')),
+                child: const Center(child: Text('Signin')),
               ),
               const SizedBox(height: 30),
               TextButton(
                 onPressed: () => Navigator.of(context).pushNamed('/signup'),
                 child: const Text(
-                  'Регистрация',
+                  'Signup',
                   style: TextStyle(
                     decoration: TextDecoration.underline,
                   ),
@@ -117,7 +129,7 @@ bool isHiddenPassword = true;
               TextButton(
                 onPressed: () =>
                     Navigator.of(context).pushNamed('/reset_password'),
-                child: const Text('Сбросить пароль'),
+                child: const Text('Reset password'),
               ),
             ],
           ),

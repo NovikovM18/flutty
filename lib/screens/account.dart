@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 class Account extends StatefulWidget {
   const Account({super.key});
@@ -14,11 +12,8 @@ class _AccountState extends State<Account> {
   final user = FirebaseAuth.instance.currentUser;
 
   Future<void> signOut() async {
-    final navigator = Navigator.of(context);
-
     await FirebaseAuth.instance.signOut();
-
-    navigator.pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false);
   }
 
   @override
