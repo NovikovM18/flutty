@@ -43,11 +43,9 @@ class _AccountState extends State<Account> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Ваш Email: ${user?.email}'),
-            TextButton(
-              onPressed: () => signOut(),
-              child: const Text('Выйти'),
-            ),
+            Text('UID: ${user?.uid}'),
+            Text('Email: ${user?.email}'),
+            if (user?.displayName != null) Text('Name: ${user!.displayName}'),
           ],
         ),
       ),

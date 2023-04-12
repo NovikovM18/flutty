@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutty/screens/account.dart';
 import 'package:flutty/screens/login.dart';
-import 'package:flutty/screens/settings.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -22,10 +21,6 @@ class _HomeState extends State<Home> {
       'id': '1',
       'name': 'Chats',
     },
-    {
-      'id': '2',
-      'name': 'Settings',
-    },
   ];
 
   void redirect(screenName) {
@@ -37,8 +32,6 @@ class _HomeState extends State<Home> {
       // );
     } else if (screenName == 'Chats') {
       Navigator.pushNamedAndRemoveUntil(context, '/chats', (Route<dynamic> route) => true);
-    } else if (screenName == 'Settings') {
-      Navigator.pushNamedAndRemoveUntil(context, '/settings', (Route<dynamic> route) => true);
     }
   }
 

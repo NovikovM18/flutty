@@ -79,8 +79,8 @@ class _SignupState extends State<Signup> {
                     ? 'Enter valid email'
                     : null,
                 decoration: const InputDecoration(
+                  labelText: 'Email',
                   border: OutlineInputBorder(),
-                  hintText: 'Enter your email',
                 ),
               ),
               const SizedBox(height: 30),
@@ -93,8 +93,8 @@ class _SignupState extends State<Signup> {
                   ? 'Minimum password length is 6 characters'
                   : null,
                 decoration: InputDecoration(
+                  labelText: 'Password',
                   border: const OutlineInputBorder(),
-                  hintText: 'Enter password',
                   suffix: InkWell(
                     onTap: togglePasswordView,
                     child: Icon(
@@ -116,8 +116,8 @@ class _SignupState extends State<Signup> {
                   ? 'Minimum password length is 6 characters'
                   : null,
                 decoration: InputDecoration(
+                  labelText: 'Repeat password',
                   border: const OutlineInputBorder(),
-                  hintText: 'Repeat password',
                   suffix: InkWell(
                     onTap: togglePasswordView,
                     child: Icon(

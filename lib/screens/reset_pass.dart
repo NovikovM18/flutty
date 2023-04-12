@@ -59,7 +59,7 @@ TextEditingController emailTextInputController = TextEditingController();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Сброс пароля'),
+        title: const Text('Reset password'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(30.0),
@@ -73,17 +73,17 @@ TextEditingController emailTextInputController = TextEditingController();
                 controller: emailTextInputController,
                 validator: (email) =>
                     email != null && !EmailValidator.validate(email)
-                        ? 'Введите правильный Email'
+                        ? 'Email is invalid'
                         : null,
                 decoration: const InputDecoration(
+                  labelText: 'Email',
                   border: OutlineInputBorder(),
-                  hintText: 'Введите Email',
                 ),
               ),
               const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: resetPassword,
-                child: const Center(child: Text('Сбросить пароль')),
+                child: const Center(child: Text('Reset password')),
               ),
             ],
           ),

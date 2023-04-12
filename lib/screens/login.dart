@@ -84,8 +84,8 @@ bool isHiddenPassword = true;
                     ? 'Email is invalid'
                     : null,
                 decoration: const InputDecoration(
+                  labelText: 'Email',
                   border: OutlineInputBorder(),
-                  hintText: 'Enter your email',
                 ),
               ),
               const SizedBox(height: 30),
@@ -98,8 +98,8 @@ bool isHiddenPassword = true;
                     : null,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: InputDecoration(
+                  labelText: 'Password',
                   border: const OutlineInputBorder(),
-                  hintText: 'Enter your password',
                   suffix: InkWell(
                     onTap: togglePasswordView,
                     child: Icon(
