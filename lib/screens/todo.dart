@@ -17,7 +17,6 @@ class _ToDoState extends State<ToDo> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('toDo'),
-        backgroundColor: Colors.blue,
         centerTitle: true,
       ),
       body: Padding(

@@ -12,21 +12,43 @@ class ToDos extends StatefulWidget {
 
 class _ToDosState extends State<ToDos> {
   dynamic selectedTodo;
+  int selectedTab = 0;
+  dynamic toDoRef = FirebaseFirestore.instance.collection('todos').snapshots();
+  void setSelectedTab(int index) {
+    setState(() {
+      selectedTab = index;
+      switch (index) {
+        case 0:
+          toDoRef = FirebaseFirestore.instance.collection('todos').snapshots();
+          break;
+        case 1:
+          toDoRef = FirebaseFirestore.instance.collection('todos').where('complited', isEqualTo: false).snapshots();
+          break;
+        case 2:
+          toDoRef = FirebaseFirestore.instance.collection('todos').where('complited', isEqualTo: true).snapshots();
+          break;
+        default:
+          toDoRef = FirebaseFirestore.instance.collection('todos').snapshots();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text('ToDos'),
+      ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('todos').snapshots(),
+        stream: toDoRef,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator.adaptive(),
             );
           }
-          if (!snapshot.hasData) {
-            return const Text('no data');
+          if (snapshot.data!.docs.isEmpty) {
+            return const Center(child: Text('no data'));
           }
           return ListView.builder(
             itemCount: snapshot.data!.docs.length,
@@ -102,14 +124,12 @@ class _ToDosState extends State<ToDos> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(todo['name'], 
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context).textTheme.bodyMedium,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               Text(todo['description'],
+                                style: Theme.of(context).textTheme.bodySmall,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -132,6 +152,23 @@ class _ToDosState extends State<ToDos> {
           );
         },
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: selectedTab,
+        onTap: setSelectedTab,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.all_inbox),
+            label: 'All'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.work),
+            label: 'Active'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.done_all),
+            label: 'Complited',
+          )
+        ]),
     );
   }
   

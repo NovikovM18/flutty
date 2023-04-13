@@ -44,8 +44,9 @@ class _AccountState extends State<Account> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('UID: ${user?.uid}'),
+            const Padding(padding:EdgeInsets.only(top: 10)),
             Text('Email: ${user?.email}'),
-            if (user?.displayName != null) Text('Name: ${user!.displayName}'),
+            if (user!.displayName!.isNotEmpty) Text('Name: ${user!.displayName}'),
           ],
         ),
       ),

@@ -8,6 +8,7 @@ import 'package:flutty/screens/reset_pass.dart';
 import 'package:flutty/screens/signup.dart';
 import 'package:flutty/screens/todos.dart';
 import 'package:flutty/screens/verify_email.dart';
+import 'package:flutty/utils/theme.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -30,11 +31,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.blue,
-        ),
-      ),
+      theme: darkTheme(),
       initialRoute: '/',
       routes: {
         '/': (context) => const Home(),

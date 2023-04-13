@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/vars.dart';
+
 class Chat extends StatefulWidget {
   String chatId;
   Chat({super.key, required this.chatId});
@@ -36,18 +38,18 @@ class _ChatState extends State<Chat> {
   void scrollToTheEnd() {
     scrollController.animateTo(
       scrollController.position.maxScrollExtent, 
-      duration: const Duration(milliseconds: 222), 
+      duration: const Duration(milliseconds: 224), 
       curve: Curves.ease
     );
   }
+  int messagesCount = 12;
   Future<void> sendMessage() async {
     var message = {
       'sender': user!.uid,
       'text': textController.text,
       'time': DateTime.now()
     };
-    final ref = FirebaseFirestore.instance
-    .collection('chats/$chatId/messages/');
+    final ref = FirebaseFirestore.instance.collection('chats/$chatId/messages/');
     await ref.doc(DateTime.now().millisecondsSinceEpoch.toString() + user!.uid.toString()).set(message);
     textController.text = '';
     scrollToTheEnd();
@@ -67,6 +69,7 @@ class _ChatState extends State<Chat> {
               stream: 
                 FirebaseFirestore.instance.collection('chats/$chatId/messages')
                 .orderBy('time')
+                // .limitToLast(messagesCount)
                 .snapshots(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -78,6 +81,7 @@ class _ChatState extends State<Chat> {
                   return const Text('no messages');
                 }
                 return ListView.builder(
+                  // physics: BouncingScrollPhysics(),
                   controller: scrollController,
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
@@ -93,10 +97,9 @@ class _ChatState extends State<Chat> {
                               child: Container(
                                 padding: const EdgeInsets.fromLTRB(8, 8, 8, 2),
                                 margin: const EdgeInsets.only(right: 18),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue[50],
-                                  border: Border.all(color: Colors.blue),
-                                  borderRadius: const BorderRadius.only(
+                                decoration: const BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(4),
                                     topRight: Radius.circular(16),
                                     bottomLeft: Radius.circular(16),
@@ -144,10 +147,9 @@ class _ChatState extends State<Chat> {
                               child: Container(
                                 padding: const EdgeInsets.fromLTRB(8, 8, 8, 2),
                                 margin: const EdgeInsets.only(left: 18),
-                                decoration: BoxDecoration(
-                                  color: Colors.green[50],
-                                  border: Border.all(color: Colors.green),
-                                  borderRadius: const BorderRadius.only(
+                                decoration: const BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(16),
                                     topRight: Radius.circular(4),
                                     bottomLeft: Radius.circular(16),
@@ -196,45 +198,43 @@ class _ChatState extends State<Chat> {
               },
             ),
           ),
-          Row(
-            children: [
-              Expanded(
-                child: Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  color: Colors.deepPurple[50],
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: textController,
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          onTap: () {
-                            Timer(const Duration(milliseconds: 666), () => scrollToTheEnd());
-                          },
-                          decoration: const InputDecoration(
-                            hintText: 'Type Something...',
-                            hintStyle: TextStyle(color: Colors.black38),
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.fromLTRB(8, 0, 8, 0)
-                          ),
-                        )
-                      ),
-                      MaterialButton(
-                        onPressed: () {
-                          if (textController.text.isNotEmpty) sendMessage();
-                        },
-                        minWidth: 0,
-                        padding: const EdgeInsets.fromLTRB(8, 8, 4, 8),
-                        shape: const CircleBorder(),
-                        color: Colors.deepPurple,
-                        child: const Icon(Icons.send, color: Colors.white, size: 22),
-                      )
-                    ],
-                  ),
+          Card(
+            color: Colors.white,
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: textController,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    onTap: () {
+                      Timer(const Duration(milliseconds: 333), () => scrollToTheEnd());
+                    },
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontFamily: mainFont,
+                      fontSize: BodyTextSize
+                    ),
+                    decoration: const InputDecoration(
+                      hintText: 'Type Something...',
+                      hintStyle: TextStyle(color: customColors.grayBG),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.fromLTRB(8, 8, 8, 0)
+                    ),
+                  )
+                ),
+                MaterialButton(
+                  onPressed: () {
+                    if (textController.text.isNotEmpty) sendMessage();
+                  },
+                  minWidth: 0,
+                  padding: const EdgeInsets.fromLTRB(8, 8, 4, 8),
+                  shape: const CircleBorder(),
+                  color: Colors.deepPurple,
+                  child: const Icon(Icons.send, color: Colors.white, size: 22),
                 )
-              )
-            ],
+              ],
+            ),
           )
         ],
       ),

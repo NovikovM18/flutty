@@ -29,7 +29,7 @@ class _ChatsState extends State<Chats> {
               child: CircularProgressIndicator.adaptive(),
             );
           }
-          if (!snapshot.hasData) {
+          if (snapshot.data!.docs.isEmpty) {
             return const Text('no data');
           }
           return ListView.builder(
@@ -37,6 +37,7 @@ class _ChatsState extends State<Chats> {
             itemBuilder: (context, index) {
               final chat = snapshot.data!.docs[index];
               return ListTile(
+                leading: CircleAvatar(),
                 title: Row(
                   children: [
                     Expanded(
@@ -44,10 +45,7 @@ class _ChatsState extends State<Chats> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(chat['name'], 
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -55,6 +53,15 @@ class _ChatsState extends State<Chats> {
                       ),
                     ),
                 ],),
+                subtitle: Row(
+                  children: [
+                    Text(chat['name'], 
+                      style:Theme.of(context).textTheme.bodySmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    )
+                  ],
+                ),
                 trailing: const Icon(Icons.arrow_forward_ios),
                 contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                 onTap: () {
