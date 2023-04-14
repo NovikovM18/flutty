@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutty/utils/vars.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -58,96 +59,107 @@ class _SignupState extends State<Signup> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Text('Signup'),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(30.0),
-        child: Form(
-          key: formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                autocorrect: false,
-                controller: emailTextInputController,
-                validator: (email) =>
-                  email != null && !EmailValidator.validate(email)
-                    ? 'Enter valid email'
-                    : null,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 30),
-              TextFormField(
-                autocorrect: false,
-                controller: passwordTextInputController,
-                obscureText: isHiddenPassword,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) => value != null && value.length < 6
-                  ? 'Minimum password length is 6 characters'
-                  : null,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  border: const OutlineInputBorder(),
-                  suffix: InkWell(
-                    onTap: togglePasswordView,
-                    child: Icon(
-                      isHiddenPassword
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 30),
-              TextFormField(
-                autocorrect: false,
-                controller: passwordTextRepeatInputController,
-                obscureText: isHiddenPassword,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) => value != null && value.length < 6
-                  ? 'Minimum password length is 6 characters'
-                  : null,
-                decoration: InputDecoration(
-                  labelText: 'Repeat password',
-                  border: const OutlineInputBorder(),
-                  suffix: InkWell(
-                    onTap: togglePasswordView,
-                    child: Icon(
-                      isHiddenPassword
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: signUp,
-                child: const Center(child: Text('Signup')),
-              ),
-              const SizedBox(height: 30),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text(
-                  'Signin',
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-              ),
-            ],
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(images.imageBG),
+              fit: BoxFit.fill,
+            ),
           ),
         ),
-      ),
+        Scaffold(
+          appBar: AppBar(
+            title: const Text('Signup'),
+            centerTitle: true,
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    autocorrect: false,
+                    controller: emailTextInputController,
+                    validator: (email) =>
+                      email != null && !EmailValidator.validate(email)
+                        ? 'Enter valid email'
+                        : null,
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  TextFormField(
+                    autocorrect: false,
+                    controller: passwordTextInputController,
+                    obscureText: isHiddenPassword,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) => value != null && value.length < 6
+                      ? 'Minimum password length is 6 characters'
+                      : null,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      border: const OutlineInputBorder(),
+                      suffix: InkWell(
+                        onTap: togglePasswordView,
+                        child: Icon(
+                          isHiddenPassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  TextFormField(
+                    autocorrect: false,
+                    controller: passwordTextRepeatInputController,
+                    obscureText: isHiddenPassword,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) => value != null && value.length < 6
+                      ? 'Minimum password length is 6 characters'
+                      : null,
+                    decoration: InputDecoration(
+                      labelText: 'Repeat password',
+                      border: const OutlineInputBorder(),
+                      suffix: InkWell(
+                        onTap: togglePasswordView,
+                        child: Icon(
+                          isHiddenPassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  ElevatedButton(
+                    onPressed: signUp,
+                    child: const Center(child: Text('Signup')),
+                  ),
+                  const SizedBox(height: 30),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text(
+                      'Signin',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ]
     );
   }
 }

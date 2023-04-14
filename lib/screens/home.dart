@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutty/screens/account.dart';
 import 'package:flutty/screens/login.dart';
+import 'package:flutty/utils/vars.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -43,7 +44,7 @@ class _HomeState extends State<Home> {
         Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: NetworkImage('https://i.pinimg.com/474x/04/c2/3d/04c23d5d2d6c90fbaab2c1c0704d1102.jpg'),
+              image: NetworkImage(images.imageBG),
               fit: BoxFit.fill,
             ),
           ),
@@ -74,31 +75,47 @@ class _HomeState extends State<Home> {
               ),
             ],
           ),
-          body: Container(
-            child: (user == null)
-              ? const Center(child: Text('go login!'))
-              : GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2
+          body: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Text('NIGGERS WORK HARD',
+                    style: Theme.of(context).textTheme.bodyLarge!
+                      .copyWith(fontSize: 66),
+                      textAlign: TextAlign.center,
+                  ),
                 ),
-                itemCount: menuList.length,
-                itemBuilder: (context, index) {
-                  final item = menuList[index];
-                  return Card(
-                    child: InkResponse(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(item['icon'], size: 58),
-                          Text(item['name'], style: Theme.of(context).textTheme.bodyLarge),
-                          Text('${item['name']} screen',style: Theme.of(context).textTheme.bodySmall),
-                        ],
+                Expanded(
+                  child: (user == null)
+                    ? const Center(child: Text('go login!'))
+                    : GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2
                       ),
-                      onTap: () => redirect(item['name']),
+                      itemCount: menuList.length,
+                      itemBuilder: (context, index) {
+                        final item = menuList[index];
+                        return Card(
+                          child: InkResponse(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(item['icon'], size: 58),
+                                Text(item['name'], style: Theme.of(context).textTheme.bodyLarge),
+                                Text('${item['name']} screen',style: Theme.of(context).textTheme.bodySmall),
+                              ],
+                            ),
+                            onTap: () => redirect(item['name']),
+                          ),
+                        );
+                      }, 
                     ),
-                  );
-                }, 
-              ),
+                ),
+              ],
+            ),
           ),
         ),
       ]

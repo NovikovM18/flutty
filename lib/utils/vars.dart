@@ -13,8 +13,14 @@ Color secondaryColor = const Color.fromARGB(255, 146, 14, 14);
 Color backgroundColor = const Color.fromARGB(100, 0, 0, 0);
 
 mixin customColors {
-  static const pink = Color.fromARGB(255, 212, 0, 106);
+  static const pink = Color.fromARGB(255, 255, 0, 128);
   static const green = Color.fromARGB(255, 0, 255, 8);
-  static const grayBG = Color.fromARGB(125, 125, 125, 125);
-  static const lightGrayBG = Color.fromARGB(124, 191, 191, 191);
+  static const yellow = Color.fromARGB(255, 225, 255, 0);
+  static const purpleBG = Color.fromARGB(68, 215, 69, 241);
+  static const greyBG = Color.fromARGB(75, 125, 125, 125);
+  static const lightGreyBG = Color.fromARGB(125, 191, 191, 191);
+}
+mixin images {
+static const imageBG = 'https://i.pinimg.com/474x/04/c2/3d/04c23d5d2d6c90fbaab2c1c0704d1102.jpg';
+
 }

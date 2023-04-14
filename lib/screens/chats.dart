@@ -12,6 +12,43 @@ class Chats extends StatefulWidget {
 
 class _ChatsState extends State<Chats> {
   final user = FirebaseAuth.instance.currentUser;
+  addNewChat() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('New chat'),
+          content: Container(
+            height: 100,
+            child: Column(
+              children: [
+                Text('Set form'),
+                Text('Set form'),
+                Text('Set form'),
+                Text('Set form'),
+              ],
+            )
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('CANCEL'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('ADD')
+            ),
+          ],
+          actionsAlignment: MainAxisAlignment.spaceAround
+        );
+      },
+    );
+  }
+  
+  Future addChat() async {
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +69,7 @@ class _ChatsState extends State<Chats> {
           if (snapshot.data!.docs.isEmpty) {
             return const Text('no data');
           }
-          return ListView.builder(
+          return ListView.separated(
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               final chat = snapshot.data!.docs[index];
@@ -55,7 +92,7 @@ class _ChatsState extends State<Chats> {
                 ],),
                 subtitle: Row(
                   children: [
-                    Text(chat['name'], 
+                    Text(chat['description'], 
                       style:Theme.of(context).textTheme.bodySmall,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -92,9 +129,16 @@ class _ChatsState extends State<Chats> {
                   );
                 },
               );
+            }, 
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(height: 4);
             },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: addNewChat,
+        child: const Icon(Icons.add_comment),
       ),
     );
   }

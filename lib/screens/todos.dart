@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutty/screens/todo.dart';
+import 'package:flutty/utils/vars.dart';
 
 class ToDos extends StatefulWidget {
   const ToDos({Key? key}) : super(key: key);
@@ -50,104 +51,114 @@ class _ToDosState extends State<ToDos> {
           if (snapshot.data!.docs.isEmpty) {
             return const Center(child: Text('no data'));
           }
-          return ListView.builder(
+          return ListView.separated(
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               final todo = snapshot.data!.docs[index];
               return Dismissible(
-                  key: Key(todo['id']),
-                  confirmDismiss: (DismissDirection direction) async {
-                    switch (direction) {
-                      case DismissDirection.endToStart:
-                        return await showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text("Confirm"),
-                              content: const Text("Are you sure you wish to delete this item?"),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(true),
-                                  child: const Text("DELETE")
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(false),
-                                  child: const Text("CANCEL"),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      case DismissDirection.startToEnd:
-                        return await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text("Confirm"),
-                                content: const Text("Are you sure you wish to complete this item?"),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () => Navigator.of(context).pop(true),
-                                    child: const Text("COMPLETE")
-                                  ),
-                                  TextButton(
-                                    onPressed: () => Navigator.of(context).pop(false),
-                                    child: const Text("CANCEL"),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                      default:
-                        break;
-                    }
-                  },
-                  background: 
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                      alignment: Alignment.centerLeft,
-                      color: Colors.green,
-                      child: const Icon(Icons.check),
-                    ),
-                  secondaryBackground: 
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      alignment: Alignment.centerRight,
-                      color: Colors.red,
-                      child: const Icon(Icons.delete_forever),
-                    ),
-                  child: ListTile(
-                    title: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(todo['name'], 
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                key: Key(todo['id']),
+                dismissThresholds: <DismissDirection, double>{},
+                confirmDismiss: (DismissDirection direction) async {
+                  switch (direction) {
+                    case DismissDirection.startToEnd:
+                      return await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirm'),
+                            content: const Text('Are you sure you wish to complete this item?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(true),
+                                child: const Text('COMPLETE')
                               ),
-                              Text(todo['description'],
-                                style: Theme.of(context).textTheme.bodySmall,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(false),
+                                child: const Text('CANCEL'),
                               ),
                             ],
-                          ),
-                        ),
-                    ],),
-                    trailing: const Icon(Icons.arrow_forward_ios),
-                    contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    onTap: () {
-                      selectedTodo = todo;
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ToDo(selectedTodo: selectedTodo)),
+                          );
+                        },
                       );
-                    },
+                    case DismissDirection.endToStart:
+                      return await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirm'),
+                            content: const Text('Are you sure you wish to delete this item?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(true),
+                                child: const Text('DELETE')
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(false),
+                                child: const Text('CANCEL'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    default:
+                      break;
+                  }
+                },
+                background: 
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                    alignment: Alignment.centerLeft,
+                    color: Colors.green,
+                    child: const Icon(Icons.check, color: Colors.white),
                   ),
-                );
+                secondaryBackground: 
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                    alignment: Alignment.centerRight,
+                    color: Colors.red,
+                    child: const Icon(Icons.delete_forever, color: Colors.white),
+                  ),
+                child: ListTile(                  
+                  title: Row(
+                    children: [
+                      if (selectedTab == 0) 
+                      todo['complited'] 
+                        ? const Icon(Icons.done_all, color: customColors.green,) 
+                        : const Icon(Icons.work, color: customColors.yellow,),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(todo['name'], 
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(todo['description'],
+                              style: Theme.of(context).textTheme.bodySmall,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  onTap: () {
+                    selectedTodo = todo;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ToDo(selectedTodo: selectedTodo)),
+                    );
+                  },
+                ),
+              );
+            }, 
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(height: 4);
             },
           );
         },

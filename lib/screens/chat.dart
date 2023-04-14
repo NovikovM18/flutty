@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import '../utils/vars.dart';
 
@@ -47,20 +48,71 @@ class _ChatState extends State<Chat> {
     var message = {
       'sender': user!.uid,
       'text': textController.text,
-      'time': DateTime.now()
+      'time': FieldValue.serverTimestamp(),
     };
     final ref = FirebaseFirestore.instance.collection('chats/$chatId/messages/');
     await ref.doc(DateTime.now().millisecondsSinceEpoch.toString() + user!.uid.toString()).set(message);
     textController.text = '';
-    scrollToTheEnd();
+    Timer(const Duration(milliseconds: 500), () => scrollToTheEnd());
+  }
+
+  showChatInfo() {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Chat info'),
+          content: Container(
+            height: 200,
+            child: Column(
+              children: [
+                Text('chats members')
+            ],),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // scrollController.addListener(() {
+    //   if(scrollController.position.maxScrollExtent == scrollController.offset) {
+    //     setState(() {
+    //       messagesCount += 12;
+    //     });
+    //     print('_______________');
+    //     print(messagesCount);
+    //   }
+    // });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text('Chat'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: showChatInfo, 
+            icon: const Icon(Icons.info),
+          )
+        ],
       ),
       body: Column(
         children: [
@@ -69,7 +121,7 @@ class _ChatState extends State<Chat> {
               stream: 
                 FirebaseFirestore.instance.collection('chats/$chatId/messages')
                 .orderBy('time')
-                // .limitToLast(messagesCount)
+                .limitToLast(messagesCount)
                 .snapshots(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -80,6 +132,9 @@ class _ChatState extends State<Chat> {
                 if (snapshot.data!.docs.isEmpty) {
                   return const Text('no messages');
                 }
+                SchedulerBinding.instance.addPostFrameCallback((context) {
+                  scrollToTheEnd();
+                });
                 return ListView.builder(
                   // physics: BouncingScrollPhysics(),
                   controller: scrollController,
@@ -89,6 +144,7 @@ class _ChatState extends State<Chat> {
                     Timestamp time = message['time'] as Timestamp;
                     DateTime date = time.toDate();
                     return ListTile(
+                      tileColor: const Color.fromARGB(0, 0, 0, 0),
                       title: (user!.uid != message['sender']) 
                       ? Row(
                           mainAxisAlignment:MainAxisAlignment.start,
@@ -100,10 +156,10 @@ class _ChatState extends State<Chat> {
                                 decoration: const BoxDecoration(
                                   color: Colors.blue,
                                   borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(4),
-                                    topRight: Radius.circular(16),
-                                    bottomLeft: Radius.circular(16),
-                                    bottomRight: Radius.circular(16),
+                                    topLeft: Radius.circular(2),
+                                    topRight: Radius.circular(12),
+                                    bottomLeft: Radius.circular(12),
+                                    bottomRight: Radius.circular(12),
                                   ),
                                 ),
                                 child: Column(
@@ -150,10 +206,10 @@ class _ChatState extends State<Chat> {
                                 decoration: const BoxDecoration(
                                   color: Colors.green,
                                   borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(16),
-                                    topRight: Radius.circular(4),
-                                    bottomLeft: Radius.circular(16),
-                                    bottomRight: Radius.circular(16),
+                                    topLeft: Radius.circular(12),
+                                    topRight: Radius.circular(2),
+                                    bottomLeft: Radius.circular(12),
+                                    bottomRight: Radius.circular(12),
                                   ),
                                 ),
                                 child: Column(
@@ -207,9 +263,7 @@ class _ChatState extends State<Chat> {
                     controller: textController,
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
-                    onTap: () {
-                      Timer(const Duration(milliseconds: 333), () => scrollToTheEnd());
-                    },
+                    onTap: () {},
                     style: const TextStyle(
                       color: Colors.black,
                       fontFamily: mainFont,
@@ -217,9 +271,9 @@ class _ChatState extends State<Chat> {
                     ),
                     decoration: const InputDecoration(
                       hintText: 'Type Something...',
-                      hintStyle: TextStyle(color: customColors.grayBG),
+                      hintStyle: TextStyle(color: Colors.grey),
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.fromLTRB(8, 8, 8, 0)
+                      contentPadding: EdgeInsets.all(8)
                     ),
                   )
                 ),

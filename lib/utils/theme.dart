@@ -4,11 +4,10 @@ import 'package:flutty/utils/vars.dart';
 ThemeData darkTheme() {
   return ThemeData(
     brightness: Brightness.dark,
-    dialogBackgroundColor: customColors.grayBG,
     primaryColor: primaryColor,
 
     appBarTheme: const AppBarTheme(
-      backgroundColor: customColors.grayBG,
+      backgroundColor: customColors.greyBG,
       centerTitle: true,
       titleTextStyle: TextStyle(
         fontFamily: mainFont,
@@ -25,14 +24,14 @@ ThemeData darkTheme() {
       bodyLarge: TextStyle(
         fontFamily: mainFont,
         fontSize: LargeTextSize,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w700,
         color: customColors.green,
       ),
       bodyMedium: TextStyle(
         fontFamily: mainFont,
         fontSize: BodyTextSize,
-        fontWeight: FontWeight.w400,
-        color: Colors.amber,
+        fontWeight: FontWeight.w500,
+        color: Color.fromARGB(255, 217, 255, 0),
       ),
       bodySmall: TextStyle(
         fontFamily: mainFont,
@@ -40,7 +39,6 @@ ThemeData darkTheme() {
         fontWeight: FontWeight.w400,
         color: customColors.pink,
       ),
-      
     ),
 
     iconTheme: const IconThemeData(
@@ -49,28 +47,36 @@ ThemeData darkTheme() {
     ),
 
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: Colors.red,
-      foregroundColor: Colors.purple,
+      backgroundColor: customColors.purpleBG,
+      foregroundColor: customColors.pink,
+      iconSize: 22
     ),
 
     buttonTheme: const ButtonThemeData(
       // height: 80,
       buttonColor: Colors.deepPurple,
-      textTheme: ButtonTextTheme.accent,
-    ),
-
-    cardTheme: const CardTheme(
-      color: Color.fromARGB(99, 155, 39, 176),
-      // shadowColor: Colors.red
+      textTheme: ButtonTextTheme.primary,
     ),
 
     scaffoldBackgroundColor: backgroundColor,
+    dialogBackgroundColor: customColors.greyBG,
+
+    cardTheme: const CardTheme(
+      color: customColors.purpleBG,
+      // shadowColor: Colors.red
+    ),
+
+    listTileTheme: const ListTileThemeData(
+      tileColor: customColors.purpleBG,
+    ),
+
     
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: customColors.grayBG,
+      backgroundColor: customColors.greyBG,
       selectedItemColor: Colors.white,
       unselectedItemColor: Color.fromARGB(255, 99, 99, 99),
+    ),
 
-    )
+    
   );
 }

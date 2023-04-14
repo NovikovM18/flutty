@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutty/screens/home.dart';
+import 'package:flutty/utils/vars.dart';
 
 class VerifyEmail extends StatefulWidget {
   const VerifyEmail({super.key});
@@ -68,47 +69,61 @@ class _VerifyEmailState extends State<VerifyEmail> {
   }
 
   @override
-  Widget build(BuildContext context) => isEmailVerified ? const Home() : Scaffold(
-    resizeToAvoidBottomInset: false,
-    appBar: AppBar(
-      title: const Text('Verify email'),
-      centerTitle: true,
-    ),
-    body: SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Check your email',
-              style: TextStyle(
-                fontSize: 20,
-              ),
+  Widget build(BuildContext context) => isEmailVerified 
+    ? const Home() 
+    : Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(images.imageBG),
+              fit: BoxFit.fill,
             ),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: canResendEmail ? sendVerificationEmail : null,
-              icon: const Icon(Icons.email),
-              label: const Text('Resend'),
-            ),
-            const SizedBox(height: 20),
-            TextButton(
-              onPressed: () async {
-                timer?.cancel();
-                await FirebaseAuth.instance.currentUser?.delete();
-                Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
-              },
-              child: const Text(
-                'Cancel',
-                style: TextStyle(
-                  color: Colors.blue,
-                ),
-              ),
-            )
-          ],
+          ),
         ),
-      ),
-    ),
-  );
+        Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            title: const Text('Verify email'),
+            centerTitle: true,
+          ),
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Check your email',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton.icon(
+                    onPressed: canResendEmail ? sendVerificationEmail : null,
+                    icon: const Icon(Icons.email),
+                    label: const Text('Resend'),
+                  ),
+                  const SizedBox(height: 20),
+                  TextButton(
+                    onPressed: () async {
+                      timer?.cancel();
+                      await FirebaseAuth.instance.currentUser?.delete();
+                      Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+                    },
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: Colors.blue,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ]
+    );
 }

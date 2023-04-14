@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutty/utils/vars.dart';
 
 class Account extends StatefulWidget {
   const Account({super.key});
@@ -18,38 +19,50 @@ class _AccountState extends State<Account> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios,
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(images.imageBG),
+              fit: BoxFit.fill,
+            ),
           ),
         ),
-        title: const Text('Account info'),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'Open shopping cart',
-            onPressed: () => signOut(),
+        Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios,
+              ),
+            ),
+            title: const Text('Account info'),
+            centerTitle: true,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.logout),
+                tooltip: 'Open shopping cart',
+                onPressed: () => signOut(),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('UID: ${user?.uid}'),
-            const Padding(padding:EdgeInsets.only(top: 10)),
-            Text('Email: ${user?.email}'),
-            if (user!.displayName!.isNotEmpty) Text('Name: ${user!.displayName}'),
-          ],
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('UID: ${user?.uid}'),
+                const Padding(padding:EdgeInsets.only(top: 10)),
+                Text('Email: ${user?.email}'),
+                if (user?.displayName != null) Text('Name: ${user!.displayName}'),
+              ],
+            ),
+          ),
         ),
-      ),
+      ]
     );
   }
 }

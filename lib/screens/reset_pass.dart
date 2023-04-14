@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutty/utils/vars.dart';
 
 class ResetPass extends StatefulWidget {
   const ResetPass({super.key});
@@ -56,39 +57,51 @@ TextEditingController emailTextInputController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Text('Reset password'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(30.0),
-        child: Form(
-          key: formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                autocorrect: false,
-                controller: emailTextInputController,
-                validator: (email) =>
-                    email != null && !EmailValidator.validate(email)
-                        ? 'Email is invalid'
-                        : null,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: resetPassword,
-                child: const Center(child: Text('Reset password')),
-              ),
-            ],
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(images.imageBG),
+              fit: BoxFit.fill,
+            ),
           ),
         ),
-      ),
+        Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            title: const Text('Reset password'),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    autocorrect: false,
+                    controller: emailTextInputController,
+                    validator: (email) =>
+                        email != null && !EmailValidator.validate(email)
+                            ? 'Email is invalid'
+                            : null,
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  ElevatedButton(
+                    onPressed: resetPassword,
+                    child: const Center(child: Text('Reset password')),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ]
     );
   }
 }
