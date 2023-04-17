@@ -1,8 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutty/utils/vars.dart';
 
 class ResetPass extends StatefulWidget {
@@ -19,39 +17,26 @@ TextEditingController emailTextInputController = TextEditingController();
   @override
   void dispose() {
     emailTextInputController.dispose();
-
     super.dispose();
   }
 
   Future<void> resetPassword() async {
     final navigator = Navigator.of(context);
-    final scaffoldMassager = ScaffoldMessenger.of(context);
-
     final isValid = formKey.currentState!.validate();
     if (!isValid) return;
-
     try {
       await FirebaseAuth.instance
-          .sendPasswordResetEmail(email: emailTextInputController.text.trim());
+        .sendPasswordResetEmail(email: emailTextInputController.text.trim());
     } on FirebaseAuthException catch (e) {
-      print(e.code);
-
-      if (e.code == 'user-not-found') {
-        // ALERT!!!
-        return;
-      } else {
-        // alert!!!
+      if (e.code.isNotEmpty) {
+        showDialog(context: context, builder: (context) => 
+          AlertDialog(
+            title: Text(e.code),
+          )
+        );
         return;
       }
     }
-
-    const snackBar = SnackBar(
-      content: Text('Сброс пароля осуществен. Проверьте почту'),
-      backgroundColor: Colors.green,
-    );
-
-    scaffoldMassager.showSnackBar(snackBar);
-
     navigator.pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
   }
 
@@ -83,9 +68,9 @@ TextEditingController emailTextInputController = TextEditingController();
                     autocorrect: false,
                     controller: emailTextInputController,
                     validator: (email) =>
-                        email != null && !EmailValidator.validate(email)
-                            ? 'Email is invalid'
-                            : null,
+                      email != null && !EmailValidator.validate(email)
+                        ? 'Email is invalid'
+                        : null,
                     decoration: const InputDecoration(
                       labelText: 'Email',
                       border: OutlineInputBorder(),

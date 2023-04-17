@@ -43,7 +43,7 @@ bool isHiddenPassword = true;
           title: Text(e.code),
         )
       );
-      if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+      if (e.code.isNotEmpty) {
         showDialog(context: context, builder: (context) => 
           AlertDialog(
             title: Text(e.code),

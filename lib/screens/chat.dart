@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -83,15 +82,6 @@ class _ChatState extends State<Chat> {
   @override
   void initState() {
     super.initState();
-    // scrollController.addListener(() {
-    //   if(scrollController.position.maxScrollExtent == scrollController.offset) {
-    //     setState(() {
-    //       messagesCount += 12;
-    //     });
-    //     print('_______________');
-    //     print(messagesCount);
-    //   }
-    // });
   }
 
   @override

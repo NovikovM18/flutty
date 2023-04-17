@@ -35,7 +35,7 @@ class _ToDosState extends State<ToDos> {
     });
   }
 
-  showConfirmDialog(String type) {
+  showConfirmDialog(String type, String id) {
     switch (type) {
       case 'Complited':
         return showDialog(
@@ -46,7 +46,7 @@ class _ToDosState extends State<ToDos> {
               content: const Text('Are you sure you wish to complete this item?'),
               actions: <Widget>[
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(true),
+                  onPressed: () => updateToDo('Complited', id),
                   child: const Text('COMPLETE')
                 ),
                 TextButton(
@@ -66,7 +66,7 @@ class _ToDosState extends State<ToDos> {
               content: const Text('Are you sure you wish to process this item?'),
               actions: <Widget>[
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(true),
+                  onPressed: () => updateToDo('Processed', id),
                   child: const Text('PROCESS')
                 ),
                 TextButton(
@@ -79,6 +79,43 @@ class _ToDosState extends State<ToDos> {
         );
       default:
       break;
+    }
+  }
+
+  updateToDo(String type, String id) {
+    final ref = FirebaseFirestore.instance.collection('todos').doc(id);
+    switch (type) {
+      case 'Complited':
+        ref.update({'complited': true}).then(
+          (value) => {
+            Navigator.of(context).pop(false)
+          },
+          onError: (e) => {
+            showDialog(context: context, builder: (context) => 
+              AlertDialog(
+                title: Text(e.code),
+              )
+            ),
+            Navigator.of(context).pop(false)
+          }
+        );
+        break;
+      case 'Processed':
+        ref.update({'complited': false}).then(
+          (value) => {
+            Navigator.of(context).pop(false)
+          },
+          onError: (e) => {
+            showDialog(context: context, builder: (context) => 
+              AlertDialog(
+                title: Text(e.code),
+              )
+            ),
+            Navigator.of(context).pop(false)
+          }
+        );
+        break;
+      default:
     }
   }
 
@@ -111,13 +148,13 @@ class _ToDosState extends State<ToDos> {
                   children: [
                     !todo['complited']
                     ? SlidableAction(
-                        onPressed: (context) => showConfirmDialog('Complited'),
+                        onPressed: (context) => showConfirmDialog('Complited', todo.id),
                         backgroundColor: Colors.green,
                         icon: Icons.access_alarm_sharp,
                         label: 'Complited',
                       )
-                    :  SlidableAction(
-                        onPressed: (context) => showConfirmDialog('Processed'),
+                    : SlidableAction(
+                        onPressed: (context) => showConfirmDialog('Processed', todo.id),
                         backgroundColor: Colors.yellow,
                         icon: Icons.access_alarm_sharp,
                         label: 'Processed',
