@@ -88,8 +88,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
             centerTitle: true,
           ),
           body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
+            child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

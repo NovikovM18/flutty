@@ -8,8 +8,9 @@ import 'package:flutty/screens/reset_pass.dart';
 import 'package:flutty/screens/signup.dart';
 import 'package:flutty/screens/todos.dart';
 import 'package:flutty/screens/verify_email.dart';
+import 'package:flutty/services/firebase_stream.dart';
 import 'package:flutty/utils/theme.dart';
-import 'firebase_options.dart';
+import 'utils/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +35,7 @@ class _MyAppState extends State<MyApp> {
       theme: darkTheme(),
       initialRoute: '/',
       routes: {
-        '/': (context) => const Home(),
+        '/': (context) => const FirebaseStream(),
         '/home': (context) => const Home(),
         '/account': (context) => const Account(),
         '/login': (context) => const Login(),

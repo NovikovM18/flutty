@@ -34,11 +34,10 @@ class _HomeState extends State<Home> {
     }
   }
 
+  final user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-
     return Stack(
       children: [
         Container(
