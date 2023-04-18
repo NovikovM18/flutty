@@ -143,8 +143,9 @@ class _ToDosState extends State<ToDos> {
               return Slidable(
                 key: Key(todo['id']),
                 endActionPane: ActionPane(
+                  extentRatio: 0.25,
                   // dismissible: DismissiblePane(onDismissed: () => showConfirmDialog('Complited')), 
-                  motion: const StretchMotion(), 
+                  motion: const ScrollMotion(), 
                   children: [
                     !todo['complited']
                     ? SlidableAction(
