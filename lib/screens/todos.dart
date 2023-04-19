@@ -13,7 +13,6 @@ class ToDos extends StatefulWidget {
 }
 
 class _ToDosState extends State<ToDos> {
-  dynamic selectedTodo;
   int selectedTab = 0;
   dynamic toDoRef = FirebaseFirestore.instance.collection('todos').snapshots();
   void setSelectedTab(int index) {
@@ -192,10 +191,9 @@ class _ToDosState extends State<ToDos> {
                   trailing: const Icon(Icons.arrow_forward_ios),
                   contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                   onTap: () {
-                    selectedTodo = todo;
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ToDo(selectedTodo: selectedTodo)),
+                      MaterialPageRoute(builder: (context) => ToDo(todoId: todo.id)),
                     );
                   },
                 ),

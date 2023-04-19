@@ -47,7 +47,7 @@ class _ChatState extends State<Chat> {
     var message = {
       'sender': user!.uid,
       'text': textController.text,
-      'time': FieldValue.serverTimestamp(),
+      'time': DateTime.now(),
     };
     final ref = FirebaseFirestore.instance.collection('chats/$chatId/messages/');
     await ref.doc(DateTime.now().millisecondsSinceEpoch.toString() + user!.uid.toString()).set(message);

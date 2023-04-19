@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutty/screens/chat.dart';
+import 'package:flutty/utils/vars.dart';
 
 class Chats extends StatefulWidget {
   const Chats({super.key});
@@ -13,30 +14,83 @@ class Chats extends StatefulWidget {
 
 class _ChatsState extends State<Chats> {
   final user = FirebaseAuth.instance.currentUser;
+  dynamic allUsers;
+  TextEditingController nameTextInputController = TextEditingController();
+  TextEditingController descriptionTextInputController = TextEditingController();
+
   addNewChat() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('New chat'),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text('New chat'),
+            ],
+          ),
           content: Container(
-            height: 100,
+            height: 300,
             child: Column(
               children: [
-                Text('Set form'),
-                Text('Set form'),
-                Text('Set form'),
-                Text('Set form'),
+                TextFormField(
+                  keyboardType: TextInputType.text,
+                  autocorrect: false,
+                  controller: nameTextInputController,
+                  decoration: const InputDecoration(
+                    labelText: 'Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                TextFormField(
+                  keyboardType: TextInputType.text,
+                  autocorrect: false,
+                  controller: descriptionTextInputController,
+                  decoration: const InputDecoration(
+                    labelText: 'Description',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+
+                // DropdownButtonFormField(
+                //   items: <String>['Dog', 'Cat', 'Tiger', 'Lion']
+                //     .map<DropdownMenuItem<String>>((String value) {
+                //       return DropdownMenuItem<String>(
+                //         value: value,
+                //         child: Text(
+                //           value,
+                //           style: TextStyle(fontSize: 20),
+                //         ),
+                //       );
+                //     }).toList(), 
+                //   onChanged: (value) => {
+                //     print(value)
+                //   },
+                  
+                // ),
+
+                
+            
               ],
             )
           ),
           actions: <Widget>[
             TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
+              onPressed: () => {
+                nameTextInputController.clear(),
+                descriptionTextInputController.clear(),
+                Navigator.of(context).pop(false),
+              },
               child: const Text('CANCEL'),
             ),
             TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
+              onPressed: () => {
+                addChat(),
+                Navigator.of(context).pop(true)
+              },
               child: const Text('ADD')
             ),
           ],
@@ -68,8 +122,18 @@ class _ChatsState extends State<Chats> {
     );
   }
   
-  Future addChat() async {
-
+ Future<void> addChat() async {
+    var chat = {
+      'id': DateTime.now().millisecondsSinceEpoch.toString() + user!.uid.toString(),
+      'name': nameTextInputController.text,
+      'description': descriptionTextInputController.text,
+      'created_at': FieldValue.serverTimestamp(),
+      'users': [user!.uid]
+    };
+    final ref = FirebaseFirestore.instance.collection('chats');
+    await ref.doc(DateTime.now().millisecondsSinceEpoch.toString() + user!.uid.toString()).set(chat);
+    nameTextInputController.clear();
+    descriptionTextInputController.clear();
   }
   
   Future deleteChat() async {
@@ -80,21 +144,25 @@ class _ChatsState extends State<Chats> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat list'),
+        title: const Text('Chats'),
         centerTitle: true,
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('chats')
           .where('users', arrayContains: user!.uid)
+          // .orderBy('created_at', descending: true)
           .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return const Text('Something went wrong');
+          }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator.adaptive(),
             );
           }
           if (snapshot.data!.docs.isEmpty) {
-            return const Text('no data');
+            return const Center(child: Text('no data'));
           }
           return ListView.separated(
             itemCount: snapshot.data!.docs.length,
@@ -103,6 +171,7 @@ class _ChatsState extends State<Chats> {
               return Slidable(
                 key: Key(chat['id']),
                 endActionPane: ActionPane(
+                  extentRatio: 0.25,
                   // dismissible: DismissiblePane(onDismissed: () => showDialogs('Complited')), 
                   motion: const StretchMotion(), 
                   children: [

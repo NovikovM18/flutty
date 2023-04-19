@@ -77,6 +77,15 @@ ThemeData darkTheme() {
       unselectedItemColor: Color.fromARGB(255, 99, 99, 99),
     ),
 
+    dialogTheme: DialogTheme(
+      titleTextStyle: TextStyle(
+        fontFamily: mainFont,
+        fontSize: MediumTextSize,
+        fontWeight: FontWeight.w500,
+        color: customColors.green,
+      ),
+    )
+
     
   );
 }

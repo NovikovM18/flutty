@@ -9,17 +9,18 @@ import 'package:flutter/scheduler.dart';
 import '../utils/vars.dart';
 
 class ToDo extends StatefulWidget {
-  ToDo({super.key, required this.selectedTodo});
-  dynamic selectedTodo;
+  ToDo({super.key, required this.todoId});
+  String todoId;
 
   @override
-  State<ToDo> createState() => _ToDoState(selectedTodo);
+  State<ToDo> createState() => _ToDoState(todoId);
 }
 
 class _ToDoState extends State<ToDo> {
-  dynamic selectedTodo;
-  _ToDoState(this.selectedTodo);
+  String todoId;
+  _ToDoState(this.todoId);
   final user = FirebaseAuth.instance.currentUser;
+  dynamic selectedTodo;
   final textController = TextEditingController();
   ScrollController scrollController = ScrollController();
   void scrollToTheEnd() {
@@ -29,24 +30,26 @@ class _ToDoState extends State<ToDo> {
       curve: Curves.ease
     );
   }
+
   Future<void> addLog() async {
     var log = {
       'sender': user!.uid,
       'message': textController.text,
       'time': DateTime.now(),
     };
-    final ref = FirebaseFirestore.instance.collection('todos/${selectedTodo.id}/logs');
+    final ref = FirebaseFirestore.instance.collection('todos/$todoId/logs');
     await ref.doc(DateTime.now().millisecondsSinceEpoch.toString() + user!.uid.toString()).set(log);
     textController.text = '';
     Timer(const Duration(milliseconds: 500), () => scrollToTheEnd());
   }
 
-  updateToDo() async {
-    final ref = FirebaseFirestore.instance.collection('todos').doc(selectedTodo.id);
+  Future updateToDo() async {
+    final ref = FirebaseFirestore.instance.collection('todos').doc(todoId);
     await ref.update({'complited': !selectedTodo['complited']}).then(
-      (value) => {
-        // Navigator.of(context).pop(false)
-        getT()
+      (v) => {
+        setState(() {
+          selectedTodo['complited'] = !selectedTodo['complited'];
+        })
       },
       onError: (e) => {
         showDialog(context: context, builder: (context) => 
@@ -54,23 +57,27 @@ class _ToDoState extends State<ToDo> {
             title: Text(e.code),
           )
         ),
-        // Navigator.of(context).pop(false)
       }
     );
   }
 
-  dynamic x;
   bool loading = true;
   getT() {
-    loading = false;
-    FirebaseFirestore.instance.collection('todos').doc(selectedTodo.id).get()
+    setState(() {
+      loading = true;
+    });
+    FirebaseFirestore.instance.collection('todos').doc(todoId).get()
       .then(
         (DocumentSnapshot doc) {
-          x = doc.data() as Map<String, dynamic>;
-          loading = true;
+          setState(() {
+            selectedTodo = doc.data() as Map<String, dynamic>;
+            loading = false;
+          });
         },
       onError: (e) => {
-        loading = true
+        setState(() {
+          loading = false;
+        })
       },
     );
   }
@@ -78,7 +85,7 @@ class _ToDoState extends State<ToDo> {
   @override
     void initState() {
     super.initState();
-    // getT();
+    getT();
   }
 
   @override
@@ -89,7 +96,7 @@ class _ToDoState extends State<ToDo> {
         title: const Text('toDo'),
         centerTitle: true,
       ),
-      body: !loading
+      body: loading
       ? const Center(child: CircularProgressIndicator())
       : PageView(
         scrollDirection: Axis.horizontal,
@@ -164,7 +171,7 @@ class _ToDoState extends State<ToDo> {
                   ),
                 ),
 
-                Text(x.toString())
+                Text(selectedTodo.toString())
               ],
             ),
           ),
@@ -178,7 +185,7 @@ class _ToDoState extends State<ToDo> {
               Expanded(
                 child: StreamBuilder(
                   stream: 
-                    FirebaseFirestore.instance.collection('todos/${selectedTodo.id}/logs')
+                    FirebaseFirestore.instance.collection('todos/$todoId/logs')
                     .orderBy('time')
                     .snapshots(),
                   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
