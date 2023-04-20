@@ -8,7 +8,7 @@ import 'package:flutty/screens/reset_pass.dart';
 import 'package:flutty/screens/signup.dart';
 import 'package:flutty/screens/todos.dart';
 import 'package:flutty/screens/verify_email.dart';
-import 'package:flutty/services/firebase_stream.dart';
+import 'package:flutty/services/firebase_auth_stream.dart';
 import 'package:flutty/utils/theme.dart';
 import 'utils/firebase_options.dart';
 
@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
       theme: darkTheme(),
       initialRoute: '/',
       routes: {
-        '/': (context) => const FirebaseStream(),
+        '/': (context) => const FirebaseAuthStream(),
         '/home': (context) => const Home(),
         '/account': (context) => const Account(),
         '/login': (context) => const Login(),

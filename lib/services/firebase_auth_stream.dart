@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutty/screens/home.dart';
 import 'package:flutty/screens/verify_email.dart';
 
-class FirebaseStream extends StatelessWidget {
-  const FirebaseStream({super.key});
+class FirebaseAuthStream extends StatelessWidget {
+  const FirebaseAuthStream({super.key});
 
   @override
   Widget build(BuildContext context) {

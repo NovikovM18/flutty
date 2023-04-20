@@ -105,6 +105,8 @@ class _ChatState extends State<Chat> {
         ],
       ),
       body: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Expanded(
             child: StreamBuilder(
@@ -126,6 +128,7 @@ class _ChatState extends State<Chat> {
                   scrollToTheEnd();
                 });
                 return ListView.builder(
+                  shrinkWrap: true,
                   // physics: BouncingScrollPhysics(),
                   controller: scrollController,
                   itemCount: snapshot.data!.docs.length,

@@ -77,7 +77,7 @@ ThemeData darkTheme() {
       unselectedItemColor: Color.fromARGB(255, 99, 99, 99),
     ),
 
-    dialogTheme: DialogTheme(
+    dialogTheme: const DialogTheme(
       titleTextStyle: TextStyle(
         fontFamily: mainFont,
         fontSize: MediumTextSize,
