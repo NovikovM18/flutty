@@ -10,7 +10,8 @@ const SmallTextSize = 14.0;
 
 Color primaryColor = const Color.fromARGB(255, 216, 244, 2);
 Color secondaryColor = const Color.fromARGB(255, 146, 14, 14);
-Color backgroundColor = Color.fromARGB(99, 0, 0, 0);
+Color darkBackgroundColor = Color.fromARGB(99, 0, 0, 0);
+Color lightBackgroundColor = Color.fromARGB(99, 255, 255, 255);
 
 mixin customColors {
   static const pink = Color.fromARGB(255, 255, 0, 128);

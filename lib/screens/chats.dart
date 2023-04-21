@@ -43,6 +43,7 @@ class _ChatsState extends State<Chats> {
   TextEditingController nameTextInputController = TextEditingController();
   TextEditingController descriptionTextInputController = TextEditingController();
   int currentPage = 0;
+  
   swapPage() {
     if (pageController.page == 0) {
       pageController.animateToPage(1, duration: const Duration(milliseconds: 99), curve: Curves.linear);
@@ -68,116 +69,6 @@ class _ChatsState extends State<Chats> {
         selectedUsers.add(id);
       });
     }
-  }
-
-  addNewChat() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text('New chat'),
-            ],
-          ),
-          content: Column(
-              children: [
-                // Flexible(
-                //   child:
-                //   Column(
-                //     children: [
-
-                //       TextFormField(
-                //         keyboardType: TextInputType.text,
-                //         autocorrect: false,
-                //         controller: nameTextInputController,
-                //         decoration: const InputDecoration(
-                //           labelText: 'Name',
-                //           border: OutlineInputBorder(),
-                //         ),
-                //       ),
-
-                //       TextFormField(
-                //         keyboardType: TextInputType.text,
-                //         autocorrect: false,
-                //         controller: descriptionTextInputController,
-                //         decoration: const InputDecoration(
-                //           labelText: 'Description',
-                //           border: OutlineInputBorder(),
-                //         ),
-                //       ),
-                //     ],
-                //   )
-                // ),
-
-                //  DropDownMultiSelect(
-                //   options: allUsers.map((e) => e['name']).toList(),
-                //   selectedValues: selectedUsers.map((e) => e['name']).toList(),
-                //   onChanged: (value) {
-                //     setState(() {
-                //       selectedUsers = value;
-                //     });
-                //     print('you have selected $selectedUsers fruits.');
-                //   },
-                // ),
-
-                Flexible(
-                  child: StreamBuilder(
-                    stream: 
-                      FirebaseFirestore.instance.collection('users')
-                      .orderBy('name')
-                      .snapshots(),
-                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator.adaptive(),
-                        );
-                      }
-                      if (snapshot.data!.docs.isEmpty) {
-                        return const Text('no users');
-                      }
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        // physics: BouncingScrollPhysics(),
-                        // controller: scrollController,
-                        itemCount: snapshot.data!.docs.length,
-                        itemBuilder: (context, index) {
-                          final user = snapshot.data!.docs[index];
-                          return ListTile(
-                            tileColor: const Color.fromARGB(0, 0, 0, 0),
-                            title: Text(user['name']),
-                            contentPadding: const EdgeInsets.all(4),
-                            onTap: () {},
-                          );
-                        },
-                      );
-                    },
-                  ),
-                )
-              ],
-            ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => {
-                nameTextInputController.clear(),
-                descriptionTextInputController.clear(),
-                Navigator.of(context).pop(false),
-              },
-              child: const Text('CANCEL'),
-            ),
-            TextButton(
-              onPressed: () => {
-                addChat(),
-                Navigator.of(context).pop(true)
-              },
-              child: const Text('ADD')
-            ),
-          ],
-          actionsAlignment: MainAxisAlignment.spaceAround
-        );
-      },
-    );
   }
 
   confirmDeleteChat() {

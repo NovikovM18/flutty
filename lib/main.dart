@@ -33,6 +33,9 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: darkTheme(),
+      // themeMode: ThemeMode.system,
+      // theme: lightTheme(),
+      // darkTheme: darkTheme(),
       initialRoute: '/',
       routes: {
         '/': (context) => const FirebaseAuthStream(),

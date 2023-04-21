@@ -20,9 +20,31 @@ class _ToDoState extends State<ToDo> {
   String todoId;
   _ToDoState(this.todoId);
   final user = FirebaseAuth.instance.currentUser;
-  dynamic selectedTodo;
   final textController = TextEditingController();
   ScrollController scrollController = ScrollController();
+  bool loading = true;
+  dynamic selectedTodo;
+  
+  getTodo() {
+    setState(() {
+      loading = true;
+    });
+    FirebaseFirestore.instance.collection('todos').doc(todoId).get()
+      .then(
+        (DocumentSnapshot doc) {
+          setState(() {
+            selectedTodo = doc.data() as Map<String, dynamic>;
+            loading = false;
+          });
+        },
+      onError: (e) => {
+        setState(() {
+          loading = false;
+        })
+      },
+    );
+  }
+
   void scrollToTheEnd() {
     scrollController.animateTo(
       scrollController.position.maxScrollExtent, 
@@ -61,31 +83,10 @@ class _ToDoState extends State<ToDo> {
     );
   }
 
-  bool loading = true;
-  getT() {
-    setState(() {
-      loading = true;
-    });
-    FirebaseFirestore.instance.collection('todos').doc(todoId).get()
-      .then(
-        (DocumentSnapshot doc) {
-          setState(() {
-            selectedTodo = doc.data() as Map<String, dynamic>;
-            loading = false;
-          });
-        },
-      onError: (e) => {
-        setState(() {
-          loading = false;
-        })
-      },
-    );
-  }
-
   @override
     void initState() {
     super.initState();
-    getT();
+    getTodo();
   }
 
   @override

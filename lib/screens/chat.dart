@@ -32,6 +32,29 @@ class _ChatState extends State<Chat> {
     11: 'Nov',
     12: 'Dec'
   };
+
+  dynamic selectedChat;
+  bool loading = false;
+  getChat() {
+    setState(() {
+      loading = true;
+    });
+    FirebaseFirestore.instance.collection('chats').doc(chatId).get()
+      .then(
+        (DocumentSnapshot doc) {
+          setState(() {
+            selectedChat = doc.data() as Map<String, dynamic>;
+            loading = false;
+          });
+        },
+      onError: (e) => {
+        setState(() {
+          loading = false;
+        })
+      },
+    );
+  }
+
   String formaTime(time) => time > 9 ? time.toString() : '0' + time.toString();
   final textController = TextEditingController();
   ScrollController scrollController = ScrollController();
@@ -59,15 +82,60 @@ class _ChatState extends State<Chat> {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Chat info'),
-          content: Container(
-            height: 200,
-            child: Column(
-              children: [
-                Text('chats members')
-            ],),
+        return AlertDialog (
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text('Chat info')
+            ]
           ),
+          content: loading 
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Wrap(
+                  children: [
+                  Text('Name: ', style: Theme.of(context).textTheme.bodyMedium),
+                  Text(selectedChat['name']),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                
+                Wrap(
+                  children: [
+                  Text('Created at: ', style: Theme.of(context).textTheme.bodyMedium),
+                  Text(selectedChat['created_at'].toString()),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                
+                Text('Members:', style: Theme.of(context).textTheme.bodyMedium),
+                SizedBox (
+                  height: 300,
+                  width: 300,
+                  child: ListView.builder(
+                      // shrinkWrap: true,
+                    // physics: BouncingScrollPhysics(),
+                    // controller: scrollController,
+                    itemCount: selectedChat['users'].length,
+                    itemBuilder: (context, index) {
+                      final user = selectedChat['users'][index];
+                      return ListTile(
+                          tileColor: const Color.fromARGB(0, 0, 0, 0),
+                          leading: CircleAvatar(),
+                          title: Text(user),
+                          contentPadding: const EdgeInsets.all(0),
+                        );
+                    },
+                  )
+                ),
+              ],
+            ),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
@@ -82,6 +150,7 @@ class _ChatState extends State<Chat> {
   @override
   void initState() {
     super.initState();
+    getChat();
   }
 
   @override
