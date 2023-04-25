@@ -11,8 +11,8 @@ class Chat extends StatefulWidget {
   Chat({super.key, required this.chatId});
 
   @override
-  State<Chat> createState() => _ChatState(chatId);
-}
+    State<Chat> createState() => _ChatState(chatId);
+  }
 
 class _ChatState extends State<Chat> {
   String chatId;
@@ -35,6 +35,10 @@ class _ChatState extends State<Chat> {
 
   dynamic selectedChat;
   bool loading = false;
+  String formaTime(time) => time > 9 ? time.toString() : '0' + time.toString();
+  final textController = TextEditingController();
+  ScrollController scrollController = ScrollController();
+
   getChat() {
     setState(() {
       loading = true;
@@ -55,9 +59,6 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  String formaTime(time) => time > 9 ? time.toString() : '0' + time.toString();
-  final textController = TextEditingController();
-  ScrollController scrollController = ScrollController();
   void scrollToTheEnd() {
     scrollController.animateTo(
       scrollController.position.maxScrollExtent, 
@@ -65,7 +66,16 @@ class _ChatState extends State<Chat> {
       curve: Curves.ease
     );
   }
+
   int messagesCount = 12;
+  moreMessages() {
+    setState(() {
+      messagesCount+=12;
+    });
+    print('%%%%%%%%%%');
+    print(messagesCount);
+  }
+  
   Future<void> sendMessage() async {
     var message = {
       'sender': user!.uid,
@@ -170,7 +180,12 @@ class _ChatState extends State<Chat> {
           IconButton(
             onPressed: showChatInfo, 
             icon: const Icon(Icons.info),
-          )
+          ),
+          IconButton(
+            onPressed: moreMessages, 
+            icon: const Icon(Icons.add),
+          ),
+
         ],
       ),
       body: Column(
@@ -197,6 +212,7 @@ class _ChatState extends State<Chat> {
                   scrollToTheEnd();
                 });
                 return ListView.builder(
+                
                   shrinkWrap: true,
                   // physics: BouncingScrollPhysics(),
                   controller: scrollController,

@@ -16,21 +16,33 @@ class _HomeState extends State<Home> {
   List menuList = [
     {
       'id': '0',
+      'name': 'Chats',
+      'icon': Icons.chat
+    },
+    {
+      'id': '1',
       'name': 'ToDos',
       'icon': Icons.today
     },
     {
-      'id': '1',
-      'name': 'Chats',
-      'icon': Icons.chat
+      'id': '2',
+      'name': 'Calendar',
+      'icon': Icons.calendar_month
     },
   ];
 
   void redirect(screenName) {
-    if (screenName == 'ToDos') {
-      Navigator.pushNamedAndRemoveUntil(context, '/todos', (Route<dynamic> route) => true);
-    } else if (screenName == 'Chats') {
-      Navigator.pushNamedAndRemoveUntil(context, '/chats', (Route<dynamic> route) => true);
+    switch (screenName) {
+      case 'Chats':
+        Navigator.pushNamedAndRemoveUntil(context, '/chats', (Route<dynamic> route) => true);
+        break;
+      case 'ToDos':
+        Navigator.pushNamedAndRemoveUntil(context, '/todos', (Route<dynamic> route) => true);
+        break;
+      case 'Calendar':
+        Navigator.pushNamedAndRemoveUntil(context, '/calendar', (Route<dynamic> route) => true);
+        break;
+      default:
     }
   }
 
@@ -80,9 +92,17 @@ class _HomeState extends State<Home> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Text('NIGGERS WORK HARD',
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('C R S',
                     style: Theme.of(context).textTheme.bodyLarge!
+                      .copyWith(fontSize: 88),
+                      textAlign: TextAlign.center,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: Text('NIGGERS WORK HARD',
+                    style: Theme.of(context).textTheme.bodyMedium!
                       .copyWith(fontSize: 66),
                       textAlign: TextAlign.center,
                   ),

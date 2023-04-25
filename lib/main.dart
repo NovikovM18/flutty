@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutty/screens/account.dart';
+import 'package:flutty/screens/calendar.dart';
 import 'package:flutty/screens/chats.dart';
 import 'package:flutty/screens/home.dart';
 import 'package:flutty/screens/login.dart';
@@ -47,6 +48,7 @@ class _MyAppState extends State<MyApp> {
         '/verify_email': (context) => const VerifyEmail(),
         '/todos': (context) => const ToDos(),
         '/chats': (context) => const Chats(),
+        '/calendar': (context) => const Calendar(),
       },
     );
   }
